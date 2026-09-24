@@ -230,8 +230,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 .section { padding: clamp(3rem, 7vw, 5rem) 0 0; scroll-margin-top: calc(var(--bar-h) + 1.5rem); }
 
-.section > h2,
-.feedhead h2 {
+.section > h2 {
   font-weight: 600;
   font-size: var(--fs-section);
   line-height: 1.15;
@@ -308,11 +307,21 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 /* ---------- notebook feed ---------- */
 
-.feedhead { display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.25rem; }
-.feedhead h2 { border: 0; padding: 0; margin: 0; }
+.nb { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
+.nbhead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1.5rem; }
+.nb h3 { margin: 0 0 0.4rem; font-size: var(--fs-title); line-height: 1.25; font-weight: 600; }
+.nb h3 a { color: var(--ink); text-decoration: none; }
+.nb h3 a:hover { color: var(--link); text-decoration: underline; }
+.nb .links { display: flex; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 0; }
+.nb > p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-body); }
+/* The one live element: the dot breathes beside the list the workflow keeps updating. */
+.nb .feedlabel {
+  display: flex; align-items: center; gap: 0.55rem; margin: 1.1rem 0 0.4rem;
+  font-family: var(--mono); font-size: var(--fs-meta); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft);
+}
 
 .pulse {
-  width: 9px; height: 9px; border-radius: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
   background: var(--link); flex: none;
   animation: breathe 3s ease-in-out infinite;
 }
@@ -329,7 +338,6 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   width: 5px; height: 5px; border-radius: 50%; background: var(--rule);
 }
 .feed li a { color: var(--ink); text-decoration: none; }
-.feedmore { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 1.25rem 0 0; }
 .feed li a:hover { color: var(--link); text-decoration: underline; }
 @media (max-width: 42rem) { .feed ul { columns: 1; } }
 
@@ -478,14 +486,18 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   </section>
 
   <section class="section notebook" id="notebook">
-    <div class="feedhead">
-      <span class="pulse" aria-hidden="true"></span>
-      <h2>Recently in the notebook</h2>
-    </div>
-    <p class="lead" style="margin-bottom:1.75rem">Lab notes, mostly about making equipment behave. Written for myself, published in case they save someone else an afternoon. This list rebuilds itself.</p>
+    <h2>Notebooks</h2>
+    <p class="lead">Logseq graphs I keep for myself and publish in case they save someone else an afternoon.</p>
 
-  <div class="feed">
-  <ul>
+    <div class="nb">
+      <div class="nbhead">
+        <h3><a href="/Notes/">Notes</a></h3>
+        <p class="links"><a href="/Notes/">Browse</a> <a href="https://github.com/dino920135/Notes">Source</a></p>
+      </div>
+      <p>The main lab notebook, mostly about making equipment and tools behave.</p>
+      <p class="feedlabel"><span class="pulse" aria-hidden="true"></span>Recently edited</p>
+      <div class="feed">
+      <ul>
   <!-- BLOG-POST-LIST:START -->
 <li><a href="https://dino920135.github.io/Notes/#/page/Use%20LLM%20for%20Journal%20Reading">Use LLM for Journal Reading</a></li>
 <li><a href="https://dino920135.github.io/Notes/#/page/May%2025th,%202026">May 25th, 2026</a></li>
@@ -498,9 +510,17 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 <li><a href="https://dino920135.github.io/Notes/#/page/Gemini%20CLI">Gemini CLI</a></li>
 <li><a href="https://dino920135.github.io/Notes/#/page/OBDLink%20EX%20+%20obdwiz">OBDLink EX + obdwiz</a></li>
   <!-- BLOG-POST-LIST:END -->
-  </ul>
-  </div>
-  <p class="feedmore"><a href="/Notes/">Browse the full notebook</a> <a href="https://github.com/dino920135/Notes">Source</a> <a href="/TOEIC-Notes/">TOEIC study notes</a></p>
+      </ul>
+      </div>
+    </div>
+
+    <div class="nb">
+      <div class="nbhead">
+        <h3><a href="/TOEIC-Notes/">TOEIC study notes</a></h3>
+        <p class="links"><a href="/TOEIC-Notes/">Browse</a> <a href="https://github.com/dino920135/TOEIC-Notes">Source</a></p>
+      </div>
+      <p>Topic vocabulary, word roots, a study plan and a running mistake log.</p>
+    </div>
   </section>
 
   <section class="section" id="projects">
