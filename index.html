@@ -10,7 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script>
 // Apply a saved theme before first paint so the page doesn't flash the other one.
-try { var saved = localStorage.getItem('theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch (e) {}
+// The key is namespaced: the Logseq sites under /Notes/ share this origin and write their own "theme".
+try { var saved = localStorage.getItem('site-theme'); if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved); } catch (e) {}
 </script>
 <style>
 :root {
@@ -581,7 +582,7 @@ function updateToggle() {
 toggle.addEventListener('click', function () {
   var next = currentTheme() === 'dark' ? 'light' : 'dark';
   root.setAttribute('data-theme', next);
-  try { localStorage.setItem('theme', next); } catch (e) {}
+  try { localStorage.setItem('site-theme', next); } catch (e) {}
   updateToggle();
 });
 systemDark.addEventListener('change', updateToggle);
