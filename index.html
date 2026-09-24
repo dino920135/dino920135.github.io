@@ -280,11 +280,30 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 .entry h3 a:hover { color: var(--link); text-decoration: underline; }
 .entry p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-body); }
 .entry p strong { color: var(--ink); font-weight: 600; }
+
+/* Publication groups: a quiet label between the lead-author entries and the compact co-author list. */
+.pubgroup {
+  font-family: var(--mono); font-size: var(--fs-meta); text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink); margin: 2.25rem 0 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--ink);
+}
+.section > h2 + .pubgroup { margin-top: 0; }
+.pubnote { font-size: var(--fs-meta); font-family: var(--mono); color: var(--ink-soft); margin: 0.75rem 0 0; }
+
+.compact { list-style: none; margin: 0; padding: 0; }
+.compact li {
+  display: grid; grid-template-columns: 8.5rem 1fr; gap: var(--gap);
+  padding: 0.8rem 0; border-bottom: 1px solid var(--rule); font-size: var(--fs-body); line-height: 1.5;
+}
+.compact .meta { font-family: var(--mono); font-size: var(--fs-meta); letter-spacing: 0.06em; color: var(--ink-soft); padding-top: 0.2rem; }
+.compact a { color: var(--ink); text-decoration: none; }
+.compact a:hover { color: var(--link); text-decoration: underline; }
+.compact .venue { display: block; color: var(--ink-soft); font-style: italic; font-size: 0.92rem; }
 .entry .links { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 0; }
 
 @media (max-width: 40rem) {
   .entry { grid-template-columns: 1fr; gap: 0.45rem; }
   .entry .meta { padding-top: 0; }
+  .compact li { grid-template-columns: 1fr; gap: 0.2rem; }
 }
 
 /* ---------- notebook feed ---------- */
@@ -413,6 +432,8 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   <section class="section" id="publications">
     <h2>Publications</h2>
 
+    <p class="pubgroup">Lead author</p>
+
     <div class="entry">
       <p class="meta">2026<br>Dissertation</p>
       <div>
@@ -423,31 +444,36 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
     </div>
 
     <div class="entry">
-      <p class="meta">2024<br>IEEE IoT-J</p>
+      <p class="meta">2026<br>Sensors</p>
       <div>
-        <h3><a href="https://doi.org/10.1109/jiot.2024.3435344">Creation and Verification of High-Definition Point Cloud Maps for Autonomous Vehicle Navigation</a></h3>
-        <p>Kai-Wei Chiang, Surachet Srinara, Yu-Ting Chiu, <strong>Syun Tsai</strong>, Meng-Lun Tsai, Chalermchon Satirapod, Naser El-Sheimy, Mengchi Ai. <em>IEEE Internet of Things Journal</em> 11(23): 37582–37598.</p>
-        <p class="links"><a href="https://doi.org/10.1109/jiot.2024.3435344">DOI</a></p>
+        <h3><a href="https://doi.org/10.3390/s26072068">Navigation Error Characteristics of LIO-, VIO-, and RIMU-Assisted INS/GNSS Multi-Sensor Fusion Schemes in a GNSS-Denied Environment</a></h3>
+        <p>Kai-Wei Chiang, <strong>Syun Tsai*</strong>, Chi-Hsin Huang, Yang-En Lu, Surachet Srinara, Meng-Lun Tsai, Naser El-Sheimy, Mengchi Ai. <em>Sensors</em> 26(7): 2068.</p>
+        <p class="links"><a href="https://doi.org/10.3390/s26072068">DOI</a></p>
       </div>
     </div>
 
     <div class="entry">
-      <p class="meta">2023<br>IEEE TVT</p>
+      <p class="meta">2025<br>IEEE OJ-ITS</p>
       <div>
-        <h3><a href="https://doi.org/10.1109/tvt.2023.3237275">High-Definition-Map-Based LiDAR Localization Through Dynamic Time-Synchronized Normal Distribution Transform Scan Matching</a></h3>
-        <p>Kai-Wei Chiang, Surachet Srinara, <strong>Syun Tsai</strong>, Cheng-Xian Lin, Meng-Lun Tsai. <em>IEEE Transactions on Vehicular Technology</em> 72(6): 7011–7023.</p>
-        <p class="links"><a href="https://doi.org/10.1109/tvt.2023.3237275">DOI</a></p>
+        <h3><a href="https://doi.org/10.1109/ojits.2025.3587274">AI-Driven Mapping System for Smart Parking Management Applications Using an INS-GNSS-Solid-State LiDAR-Monocular Camera Fusion Engine Empowered by HD Maps</a></h3>
+        <p>Kai-Wei Chiang, <strong>Syun Tsai</strong>, Jou-An Chen, Surachet Srinara, Meng-Lun Tsai, Chih-Yun Hsieh, Jyun-Yang Hung, Chalermchon Satirapod, Naser El-Sheimy. <em>IEEE Open Journal of Intelligent Transportation Systems</em> 6: 995–1008.</p>
+        <p class="links"><a href="https://doi.org/10.1109/ojits.2025.3587274">DOI</a></p>
       </div>
     </div>
 
-    <div class="entry">
-      <p class="meta">2022<br>IEEE IV</p>
-      <div>
-        <h3><a href="https://doi.org/10.1109/iv51971.2022.9827391">Reliable Evaluation of Navigation States Estimation for Automated Driving Systems</a></h3>
-        <p>Surachet Srinara, <strong>Syun Tsai</strong>, Cheng-Xian Lin, Meng-Lun Tsai, Kai-Wei Chiang. <em>2022 IEEE Intelligent Vehicles Symposium (IV)</em>, 1765–1773.</p>
-        <p class="links"><a href="https://doi.org/10.1109/iv51971.2022.9827391">DOI</a></p>
-      </div>
-    </div>
+    <p class="pubnote">* Corresponding author</p>
+
+    <p class="pubgroup">Co-author</p>
+
+    <ol class="compact">
+      <li><span class="meta">2026</span><span><a href="https://doi.org/10.5194/isprs-archives-xlix-b4-2026-369-2026">A Comprehensive Toolkit for Semi-Automated HD Maps Production: Integrating AI-Driven Feature Extraction with 3D Interactive Validation and Editing</a> <span class="venue">ISPRS Archives XLIX-B4</span></span></li>
+      <li><span class="meta">2026</span><span><a href="https://doi.org/10.5194/isprs-archives-xlix-b1-2026-361-2026">An INS-Centric Locator for Autonomous Vehicles Aided by GNSS, Monocular Visual-Inertial Odometry, and HD Vector Maps</a> <span class="venue">ISPRS Archives XLIX-B1</span></span></li>
+      <li><span class="meta">2024</span><span><a href="https://doi.org/10.1109/jiot.2024.3435344">Creation and Verification of High-Definition Point Cloud Maps for Autonomous Vehicle Navigation</a> <span class="venue">IEEE Internet of Things Journal</span></span></li>
+      <li><span class="meta">2023</span><span><a href="https://doi.org/10.1109/tvt.2023.3237275">High-Definition-Map-Based LiDAR Localization Through Dynamic Time-Synchronized Normal Distribution Transform Scan Matching</a> <span class="venue">IEEE Transactions on Vehicular Technology</span></span></li>
+      <li><span class="meta">2022</span><span><a href="https://doi.org/10.1109/iv51971.2022.9827391">Reliable Evaluation of Navigation States Estimation for Automated Driving Systems</a> <span class="venue">IEEE Intelligent Vehicles Symposium (IV)</span></span></li>
+      <li><span class="meta">2021</span><span><a href="https://doi.org/10.1109/inertial51137.2021.9430476">Performance Analysis of 3D NDT Scan Matching for Autonomous Vehicles Using INS/GNSS/3D LiDAR-SLAM Integration Scheme</a> <span class="venue">IEEE INERTIAL</span></span></li>
+      <li><span class="meta">2020</span><span><a href="https://doi.org/10.33012/2020.17545">The Performance Analysis of Multi-Sensor Integration Using Smartphone’s Sensors for Seamless Urban and Indoor Navigation</a> <span class="venue">ION GNSS+</span></span></li>
+    </ol>
   </section>
 
   <section class="section" id="code">
