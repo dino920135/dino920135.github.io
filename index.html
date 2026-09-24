@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tsai Syun — Integrated Navigation</title>
+<meta name="description" content="Tsai Syun, Ph.D. candidate at NCKU Geomatics (POINT Lab). Integrated navigation with INS, GNSS, LiDAR, camera and mmWave radar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night:   #121A33;
+  --night-2: #1B2650;
+  --signal:  #55D0E8;
+  --on-night:#EEF1F8;
+  --on-night-soft: #A3AEC9;
+
+  --paper:   #F5F6F8;
+  --ink:     #141A26;
+  --ink-soft:#5A6376;
+  --rule:    #D8DCE4;
+  --link:    #14627C;
+
+  --serif: "Spectral", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --measure: 36rem;
+  --gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:   #0D1220;
+    --ink:     #E2E7F0;
+    --ink-soft:#8E98AC;
+    --rule:    #242C40;
+    --link:    #6FC9E0;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:#0D1220; --ink:#E2E7F0; --ink-soft:#8E98AC; --rule:#242C40; --link:#6FC9E0;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17.5px;
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 3rem);
+}
+
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+
+/* ---------- hero: the one loud thing ---------- */
+
+.hero {
+  position: relative;
+  background: var(--night);
+  color: var(--on-night);
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 18% 15%, var(--night-2) 0%, transparent 62%);
+  z-index: -2;
+}
+
+.trace {
+  position: absolute;
+  inset: auto 0 0 0;
+  width: 100%;
+  height: 76%;
+  z-index: -1;
+}
+
+.hero .wrap {
+  position: relative;
+  padding-top: 1.75rem;
+  padding-bottom: clamp(7rem, 20vw, 11rem);
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: clamp(3.5rem, 10vw, 6rem);
+}
+.masthead .who {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  color: var(--on-night-soft);
+  margin: 0;
+}
+.topnav { display: flex; flex-wrap: wrap; gap: 1.1rem; font-family: var(--mono); font-size: 0.86rem; }
+.topnav a { color: var(--on-night-soft); text-decoration: none; }
+.topnav a:hover { color: var(--signal); text-decoration: underline; }
+
+.hero h1 {
+  font-weight: 300;
+  font-size: clamp(2.4rem, 6.6vw, 4.1rem);
+  line-height: 1.07;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+  max-width: 16ch;
+}
+.hero .lede {
+  font-size: clamp(1.02rem, 2.1vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--on-night-soft);
+  max-width: 42ch;
+  margin: 0 0 2.5rem;
+}
+.hero .lede em { color: var(--on-night); font-style: normal; }
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--on-night-soft);
+  margin: 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid rgba(255,255,255,0.14);
+  max-width: 44rem;
+  list-style: none;
+}
+
+/* ---------- sections ---------- */
+
+.section { padding: clamp(3rem, 7vw, 5rem) 0 0; scroll-margin-top: 1.5rem; }
+
+.section > h2 {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--rule);
+}
+.lead { max-width: var(--measure); color: var(--ink-soft); }
+.lead strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- research threads ---------- */
+
+.threads { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.thread h3 { margin: 0 0 0.4rem; font-size: 1.08rem; font-weight: 600; }
+.thread p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+
+/* ---------- list entries (papers, code) ---------- */
+
+.entry {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: var(--gap);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.entry .meta { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); padding-top: 0.3rem; line-height: 1.5; }
+.entry h3 { margin: 0 0 0.35rem; font-size: 1.12rem; font-weight: 600; }
+.entry h3 a { color: var(--ink); text-decoration: none; }
+.entry h3 a:hover { color: var(--link); text-decoration: underline; }
+.entry p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: 0.98rem; }
+.entry .links { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.84rem; margin: 0; }
+
+@media (max-width: 40rem) {
+  .entry { grid-template-columns: 1fr; gap: 0.45rem; }
+  .entry .meta { padding-top: 0; }
+}
+
+/* ---------- notebook feed ---------- */
+
+.section.notebook > h2 { border: 0; padding: 0; margin: 0; }
+.feedhead { display: flex; align-items: center; gap: 0.55rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.25rem; }
+
+.pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--link); flex: none;
+  animation: breathe 3s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.3; transform: scale(0.8); }
+}
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+
+.feed ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: var(--gap); }
+.feed li { position: relative; padding: 0.38rem 0 0.38rem 1.1rem; break-inside: avoid; font-size: 0.97rem; }
+.feed li::before {
+  content: ""; position: absolute; left: 0; top: 1.05em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--rule);
+}
+.feed li a { color: var(--ink); text-decoration: none; }
+.feed li a:hover { color: var(--link); text-decoration: underline; }
+@media (max-width: 42rem) { .feed ul { columns: 1; } }
+
+/* ---------- footer ---------- */
+
+.foot {
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+  border-top: 1px solid var(--rule);
+  padding: 1.5rem 0 4rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  justify-content: space-between;
+}
+.foot p { margin: 0; }
+.foot .elsewhere { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="trace" viewBox="0 0 1200 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M 470 196 C 560 168, 612 116, 700 78 S 902 22, 1030 34 S 1160 58, 1190 74"
+          fill="none" stroke="#7683A8" stroke-width="1.6"
+          stroke-dasharray="5 8" stroke-linecap="round" opacity="0.7"/>
+    <path id="fused" d="M 20 306 C 190 312, 250 208, 400 198 S 660 250, 790 168 S 1040 96, 1195 128"
+          fill="none" stroke="#55D0E8" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+    <use href="#fused" stroke="#55D0E8" stroke-width="5.4" stroke-linecap="round"
+         stroke-dasharray="0 46" opacity="0.5"/>
+  </svg>
+
+  <div class="wrap">
+    <div class="masthead">
+      <p class="who">Tsai Syun / dino920135</p>
+      <nav class="topnav">
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#code">Code</a>
+        <a href="#notebook">Notebook</a>
+        <a href="https://github.com/dino920135">GitHub</a>
+      </nav>
+    </div>
+
+    <h1>Navigation that holds when a sensor doesn’t.</h1>
+    <p class="lede">Ph.D. candidate at NCKU Geomatics, POINT Lab. I fuse inertial, satellite, LiDAR, camera and <em>mmWave radar</em> measurements into one trajectory that stays usable when any single sensor drops out.</p>
+    <ul class="stack">
+      <li>INS</li><li>GNSS</li><li>LiDAR</li><li>Camera</li><li>mmWave radar</li>
+    </ul>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section" id="research">
+    <h2>Research</h2>
+    <p class="lead">Integrated navigation is mostly a study of failure modes. <strong>GNSS drops out under a bridge, inertial solutions drift without bound, LiDAR needs structure, cameras need light, and radar sees through weather but returns a sparse, noisy cloud.</strong> My work is on combining them so the estimate holds where any one of them would not.</p>
+
+    <div class="threads" style="margin-top:2rem">
+      <div class="thread">
+        <h3>Radar-aided localization</h3>
+        <p>Using mmWave radar as a navigation sensor rather than a perception one — ego-velocity from Doppler, registration against sparse returns, and what that buys you when the other sensors are blind.</p>
+      </div>
+      <div class="thread">
+        <h3>Inertial characterization</h3>
+        <p>Understanding what a given IMU actually does before trusting it in a filter: correlating raw output against a known reference to recover orientation, scale and error behaviour.</p>
+      </div>
+      <div class="thread">
+        <h3>Rigs and synchronization</h3>
+        <p>Multi-sensor fusion is only as good as its timestamps. Building the hardware side — microcontroller triggering, disciplined clocks, vehicle interfaces — so the data arriving at the estimator is worth estimating from.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="publications">
+    <h2>Publications</h2>
+
+    <div class="entry">
+      <p class="meta">2025<br>Journal or venue</p>
+      <div>
+        <h3><a href="[doi or pdf link]">[Paper title]</a></h3>
+        <p>[Authors, with your own name marked. One sentence on the contribution — what the paper establishes that wasn't known before.]</p>
+        <p class="links">
+          <a href="[doi]">DOI</a>
+          <a href="[pdf]">PDF</a>
+          <a href="[code repo]">Code</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">2024<br>Conference</p>
+      <div>
+        <h3><a href="[link]">[Paper title]</a></h3>
+        <p>[Authors. One sentence on the contribution.]</p>
+        <p class="links">
+          <a href="[doi]">DOI</a>
+          <a href="[pdf]">PDF</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="code">
+    <h2>Code</h2>
+
+    <div class="entry">
+      <p class="meta">C++</p>
+      <div>
+        <h3><a href="https://github.com/dino920135/coloradar_study">coloradar_study</a></h3>
+        <p>Working through the ColoRadar dataset — mmWave radar alongside LiDAR and inertial data — as a testbed for radar-based localization.</p>
+        <p class="links"><a href="https://github.com/dino920135/coloradar_study">Repository</a></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">MATLAB</p>
+      <div>
+        <h3><a href="https://github.com/dino920135/RawIMUDataCorrelationAnalysis">RawIMUDataCorrelationAnalysis</a></h3>
+        <p>Recovers the unknown orientation of an IMU by correlating its raw output against a known reference system, so sensors of uncertain mounting can still be compared directly.</p>
+        <p class="links"><a href="https://github.com/dino920135/RawIMUDataCorrelationAnalysis">Repository</a></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">Reading list</p>
+      <div>
+        <h3><a href="https://github.com/dino920135/MmWave-Radar-Localization-References">MmWave-Radar-Localization-References</a></h3>
+        <p>A collected bibliography of mmWave radar localization work — the papers I keep coming back to, kept public so other people entering the area don't have to assemble it twice.</p>
+        <p class="links"><a href="https://github.com/dino920135/MmWave-Radar-Localization-References">Repository</a></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">Logseq<br>GitHub Actions</p>
+      <div>
+        <h3><a href="https://github.com/dino920135/Notes">Notes</a></h3>
+        <p>My working notebook, published as a site, with a scheduled workflow that pulls the ten most recently edited pages and writes them into this page and my GitHub profile.</p>
+        <p class="links">
+          <a href="https://github.com/dino920135/Notes">Repository</a>
+          <a href="/Notes/">Read it</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section notebook" id="notebook">
+    <div class="feedhead">
+      <span class="pulse" aria-hidden="true"></span>
+      <h2>Recently in the notebook</h2>
+    </div>
+    <p class="lead" style="margin-bottom:1.75rem">Lab notes, mostly about making equipment behave. Written for myself, published in case they save someone else an afternoon. This list rebuilds itself.</p>
+
+  <div class="feed">
+  <ul>
+  <!-- BLOG-POST-LIST:START -->
+  <!-- BLOG-POST-LIST:END -->
+  </ul>
+  </div>
+  </section>
+
+  <footer class="foot">
+    <p>POINT Lab, Dept. of Geomatics, NCKU / Tainan, Taiwan</p>
+    <div class="elsewhere">
+      <a href="https://github.com/dino920135">GitHub</a>
+      <!-- TODO: add once known
+      <a href="mailto:EMAIL">Email</a>
+      <a href="SCHOLAR_URL">Scholar</a>
+      -->
+    </div>
+  </footer>
+</main>
+
+<script>
+// Fragment navigation is blocked in some embedded/sandboxed frames.
+// Scroll explicitly so the nav works everywhere.
+document.querySelectorAll('.topnav a[href^="#"]').forEach(function (link) {
+  link.addEventListener('click', function (event) {
+    var target = document.getElementById(link.getAttribute('href').slice(1));
+    if (!target) return;
+    event.preventDefault();
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    try { history.replaceState(null, '', link.getAttribute('href')); } catch (e) {}
+  });
+});
+</script>
+
+</body>
+</html>
