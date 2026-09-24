@@ -329,6 +329,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   width: 5px; height: 5px; border-radius: 50%; background: var(--rule);
 }
 .feed li a { color: var(--ink); text-decoration: none; }
+.feedmore { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 1.25rem 0 0; }
 .feed li a:hover { color: var(--link); text-decoration: underline; }
 @media (max-width: 42rem) { .feed ul { columns: 1; } }
 
@@ -499,6 +500,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   <!-- BLOG-POST-LIST:END -->
   </ul>
   </div>
+  <p class="feedmore"><a href="/Notes/">Browse the full notebook</a> <a href="https://github.com/dino920135/Notes">Source</a></p>
   </section>
 
   <section class="section" id="projects">
@@ -529,18 +531,6 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
         <h3><a href="https://github.com/dino920135/MmWave-Radar-Localization-References">MmWave-Radar-Localization-References</a></h3>
         <p>A collected bibliography of mmWave radar localization work — the papers I keep coming back to, kept public so other people entering the area don't have to assemble it twice.</p>
         <p class="links"><a href="https://github.com/dino920135/MmWave-Radar-Localization-References">Repository</a></p>
-      </div>
-    </div>
-
-    <div class="entry">
-      <p class="meta">Logseq<br>GitHub Actions</p>
-      <div>
-        <h3><a href="https://github.com/dino920135/Notes">Notes</a></h3>
-        <p>My working notebook, published as a site, with a scheduled workflow that pulls the ten most recently edited pages and writes them into this page and my GitHub profile.</p>
-        <p class="links">
-          <a href="https://github.com/dino920135/Notes">Repository</a>
-          <a href="/Notes/">Read it</a>
-        </p>
       </div>
     </div>
   </section>
