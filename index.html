@@ -26,6 +26,7 @@
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --measure: 36rem;
+  --bar-h: 3.25rem;
   --gap: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -93,7 +94,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 .hero .wrap {
   position: relative;
-  padding-top: 1.75rem;
+  padding-top: calc(var(--bar-h) + clamp(3.5rem, 10vw, 6rem));
   padding-bottom: clamp(7rem, 20vw, 11rem);
 }
 /* On narrow screens the figure would run through the lede; give it its own band below. */
@@ -102,13 +103,26 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   .trace { height: 10rem; }
 }
 
+/* Fixed so the nav stays reachable. Transparent over the top of the hero,
+   solid once the page has scrolled (.stuck is toggled by the script below). */
+.bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+}
+.bar.stuck {
+  background: rgba(18, 26, 51, 0.94);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
 .masthead {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.5rem;
-  align-items: baseline;
+  gap: 0.4rem 1.5rem;
+  align-items: center;
   justify-content: space-between;
-  padding-bottom: clamp(3.5rem, 10vw, 6rem);
+  min-height: var(--bar-h);
 }
 .masthead .who {
   font-family: var(--mono);
@@ -119,6 +133,17 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 .topnav { display: flex; flex-wrap: wrap; gap: 1.1rem; font-family: var(--mono); font-size: 0.86rem; }
 .topnav a { color: var(--on-night-soft); text-decoration: none; }
 .topnav a:hover { color: var(--signal); text-decoration: underline; }
+
+/* Phones: one nav row that fits (GitHub is also in the footer); the name shows only
+   at the top, so the stuck bar stays a single slim line. */
+@media (max-width: 40rem) {
+  .masthead { padding-top: 0.9rem; padding-bottom: 0.9rem; }
+  .topnav { gap: 0.9rem; font-size: 0.8rem; }
+  .topnav .ext { display: none; }
+  .bar.stuck .masthead { padding-top: 0; padding-bottom: 0; }
+  .bar.stuck .who { display: none; }
+  .hero .wrap { padding-top: calc(var(--bar-h) + 5rem); }
+}
 
 .hero h1 {
   font-weight: 300;
@@ -153,7 +178,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 /* ---------- sections ---------- */
 
-.section { padding: clamp(3rem, 7vw, 5rem) 0 0; scroll-margin-top: 1.5rem; }
+.section { padding: clamp(3rem, 7vw, 5rem) 0 0; scroll-margin-top: calc(var(--bar-h) + 1.5rem); }
 
 .section > h2 {
   font-weight: 600;
@@ -239,6 +264,19 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 </head>
 <body>
 
+<div class="bar">
+  <div class="wrap masthead">
+    <p class="who">Tsai Syun / dino920135</p>
+    <nav class="topnav">
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#code">Code</a>
+      <a href="#notebook">Notebook</a>
+      <a class="ext" href="https://github.com/dino920135">GitHub</a>
+    </nav>
+  </div>
+</div>
+
 <header class="hero">
   <svg class="trace" viewBox="0 0 1200 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
     <!-- Geometry only: styling on the original would override the <use> copies.
@@ -258,17 +296,6 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   </svg>
 
   <div class="wrap">
-    <div class="masthead">
-      <p class="who">Tsai Syun / dino920135</p>
-      <nav class="topnav">
-        <a href="#research">Research</a>
-        <a href="#publications">Publications</a>
-        <a href="#code">Code</a>
-        <a href="#notebook">Notebook</a>
-        <a href="https://github.com/dino920135">GitHub</a>
-      </nav>
-    </div>
-
     <h1>Navigation that holds when a sensor doesn’t.</h1>
     <p class="lede">Ph.D. candidate at NCKU Geomatics, POINT Lab. I fuse inertial, satellite, LiDAR, camera and <em>mmWave radar</em> measurements into one trajectory that stays usable when any single sensor drops out.</p>
     <ul class="stack">
@@ -408,6 +435,12 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 </main>
 
 <script>
+// Give the fixed nav bar a solid background once the page has scrolled.
+var bar = document.querySelector('.bar');
+function updateBar() { bar.classList.toggle('stuck', window.scrollY > 8); }
+window.addEventListener('scroll', updateBar, { passive: true });
+updateBar();
+
 // Fragment navigation is blocked in some embedded/sandboxed frames.
 // Scroll explicitly so the nav works everywhere.
 document.querySelectorAll('.topnav a[href^="#"]').forEach(function (link) {
