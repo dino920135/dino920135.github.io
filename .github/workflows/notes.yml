@@ -37,8 +37,11 @@ jobs:
       - name: Update site list
         run: sh profile/.github/workflows/GetListInRepo.sh notes site/index.html
 
+      # Rebase onto main first: a push made while this job ran would otherwise
+      # reject its commit as non-fast-forward.
       - uses: EndBug/add-and-commit@v9
         with:
           cwd: ./site
           message: "Update notes list with Github Action"
           default_author: github_actions
+          pull: '--rebase --autostash'
