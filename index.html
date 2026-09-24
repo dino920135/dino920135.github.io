@@ -27,6 +27,14 @@
 
   --measure: 36rem;
   --bar-h: 3.25rem;
+
+  /* Type scale below the hero: each level is a visible step down from the one above.
+     section > item title > lead/body > meta. */
+  --fs-section: clamp(1.7rem, 3.4vw, 2.15rem);
+  --fs-title:   1.3rem;
+  --fs-lead:    1.15rem;
+  --fs-body:    1rem;
+  --fs-meta:    0.76rem;
   --gap: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -180,21 +188,24 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 .section { padding: clamp(3rem, 7vw, 5rem) 0 0; scroll-margin-top: calc(var(--bar-h) + 1.5rem); }
 
-.section > h2 {
+.section > h2,
+.feedhead h2 {
   font-weight: 600;
-  font-size: 1.05rem;
-  margin: 0 0 1.5rem;
-  padding-bottom: 0.6rem;
+  font-size: var(--fs-section);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.75rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--rule);
 }
-.lead { max-width: var(--measure); color: var(--ink-soft); }
+.lead { max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-lead); }
 .lead strong { color: var(--ink); font-weight: 600; }
 
 /* ---------- research threads ---------- */
 
 .threads { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
-.thread h3 { margin: 0 0 0.4rem; font-size: 1.08rem; font-weight: 600; }
-.thread p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+.thread h3 { margin: 0 0 0.45rem; font-size: var(--fs-title); line-height: 1.25; font-weight: 600; }
+.thread p { margin: 0; color: var(--ink-soft); font-size: var(--fs-body); }
 
 /* ---------- list entries (papers, code) ---------- */
 
@@ -206,12 +217,16 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   border-bottom: 1px solid var(--rule);
   align-items: start;
 }
-.entry .meta { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); padding-top: 0.3rem; line-height: 1.5; }
-.entry h3 { margin: 0 0 0.35rem; font-size: 1.12rem; font-weight: 600; }
+.entry .meta {
+  font-family: var(--mono); font-size: var(--fs-meta); color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding-top: 0.45rem; line-height: 1.6;
+}
+.entry h3 { margin: 0 0 0.4rem; font-size: var(--fs-title); line-height: 1.25; font-weight: 600; }
 .entry h3 a { color: var(--ink); text-decoration: none; }
 .entry h3 a:hover { color: var(--link); text-decoration: underline; }
-.entry p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: 0.98rem; }
-.entry .links { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.84rem; margin: 0; }
+.entry p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-body); }
+.entry .links { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 0; }
 
 @media (max-width: 40rem) {
   .entry { grid-template-columns: 1fr; gap: 0.45rem; }
@@ -220,11 +235,11 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 /* ---------- notebook feed ---------- */
 
-.section.notebook .feedhead h2 { font-weight: 600; font-size: 1.05rem; line-height: inherit; border: 0; padding: 0; margin: 0; }
-.feedhead { display: flex; align-items: center; gap: 0.55rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.25rem; }
+.feedhead { display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.25rem; }
+.feedhead h2 { border: 0; padding: 0; margin: 0; }
 
 .pulse {
-  width: 7px; height: 7px; border-radius: 50%;
+  width: 9px; height: 9px; border-radius: 50%;
   background: var(--link); flex: none;
   animation: breathe 3s ease-in-out infinite;
 }
@@ -235,7 +250,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
 
 .feed ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: var(--gap); }
-.feed li { position: relative; padding: 0.38rem 0 0.38rem 1.1rem; break-inside: avoid; font-size: 0.97rem; }
+.feed li { position: relative; padding: 0.38rem 0 0.38rem 1.1rem; break-inside: avoid; font-size: var(--fs-body); }
 .feed li::before {
   content: ""; position: absolute; left: 0; top: 1.05em;
   width: 5px; height: 5px; border-radius: 50%; background: var(--rule);
@@ -307,7 +322,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 <main class="wrap">
   <section class="section" id="research">
     <h2>Research</h2>
-    <p class="lead">Integrated navigation is mostly a study of failure modes. <strong>GNSS drops out under a bridge, inertial solutions drift without bound, LiDAR needs structure, cameras need light, and radar sees through weather but returns a sparse, noisy cloud.</strong> My work is on combining them so the estimate holds where any one of them would not.</p>
+    <p class="lead">Integrated navigation is mostly a study of failure modes. GNSS drops out under a bridge, inertial solutions drift without bound, LiDAR needs structure, cameras need light, and radar sees through weather but returns a sparse, noisy cloud. <strong>My work is on combining them so the estimate holds where any one of them would not.</strong></p>
 
     <div class="threads" style="margin-top:2rem">
       <div class="thread">
