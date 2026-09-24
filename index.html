@@ -8,19 +8,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+// Apply a saved theme before first paint so the page doesn't flash the other one.
+try { var saved = localStorage.getItem('theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch (e) {}
+</script>
 <style>
 :root {
-  --night:   #121A33;
-  --night-2: #1B2650;
-  --signal:  #55D0E8;
-  --on-night:#EEF1F8;
-  --on-night-soft: #A3AEC9;
+  /* Light: ink and vermilion. Dark (below): graphite and amber. One accent per mode. */
+  color-scheme: light;
+  /* "night" is the hero panel: light warm grey here, graphite in dark mode. */
+  --night:   #ECEBE5;
+  --night-2: #F6F5F0;
+  --signal:  #E0502F;
+  --drift:   #9A9DA3;
+  --on-night:#111111;
+  --on-night-soft: #5C5F66;
+  --hero-line: rgba(0, 0, 0, 0.12);
+  --bar-line:  rgba(0, 0, 0, 0.08);
 
-  --paper:   #F5F6F8;
-  --ink:     #141A26;
-  --ink-soft:#5A6376;
-  --rule:    #D8DCE4;
-  --link:    #14627C;
+  --paper:   #FAFAF7;
+  --ink:     #111111;
+  --ink-soft:#5C5F66;
+  --rule:    #DEDDD8;
+  --link:    #C23B22;
 
   --serif: "Spectral", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -40,15 +50,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper:   #0D1220;
-    --ink:     #E2E7F0;
-    --ink-soft:#8E98AC;
-    --rule:    #242C40;
-    --link:    #6FC9E0;
+    color-scheme: dark;
+    --night:   #1E1F22;
+    --night-2: #2A2B2F;
+    --signal:  #F5B041;
+    --drift:   #8C8A85;
+    --on-night:#F2F0EB;
+    --on-night-soft: #A8A59E;
+    --hero-line: rgba(255, 255, 255, 0.14);
+    --bar-line:  rgba(255, 255, 255, 0.08);
+    --paper:   #141517;
+    --ink:     #ECEAE4;
+    --ink-soft:#A09D96;
+    --rule:    #2C2D31;
+    --link:    #F5B041;
   }
 }
 :root[data-theme="dark"] {
-  --paper:#0D1220; --ink:#E2E7F0; --ink-soft:#8E98AC; --rule:#242C40; --link:#6FC9E0;
+  color-scheme: dark;
+  --night:#1E1F22; --night-2:#2A2B2F; --signal:#F5B041; --drift:#8C8A85;
+  --on-night:#F2F0EB; --on-night-soft:#A8A59E;
+  --hero-line:rgba(255,255,255,0.14); --bar-line:rgba(255,255,255,0.08);
+  --paper:#141517; --ink:#ECEAE4; --ink-soft:#A09D96; --rule:#2C2D31; --link:#F5B041;
 }
 
 * { box-sizing: border-box; }
@@ -100,6 +123,9 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   z-index: -1;
 }
 
+.trace .drift { stroke: var(--drift); }
+.trace .fused { stroke: var(--signal); }
+
 .hero .wrap {
   position: relative;
   padding-top: calc(var(--bar-h) + clamp(3.5rem, 10vw, 6rem));
@@ -119,10 +145,10 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   z-index: 10;
 }
 .bar.stuck {
-  background: rgba(18, 26, 51, 0.94);
+  background: color-mix(in srgb, var(--night) 94%, transparent);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--bar-line);
 }
 .masthead {
   display: flex;
@@ -141,6 +167,16 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 .topnav { display: flex; flex-wrap: wrap; gap: 1.1rem; font-family: var(--mono); font-size: 0.86rem; }
 .topnav a { color: var(--on-night-soft); text-decoration: none; }
 .topnav a:hover { color: var(--signal); text-decoration: underline; }
+.navgroup { display: flex; align-items: center; gap: 1.5rem; }
+
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.2rem 0; border: 0; background: none; cursor: pointer;
+  font-family: var(--mono); font-size: 0.86rem; color: var(--on-night-soft);
+}
+.theme-toggle:hover { color: var(--signal); }
+.theme-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+.theme-toggle svg { width: 15px; height: 15px; flex: none; }
 
 /* Phones: one nav row that fits (GitHub is also in the footer); the name shows only
    at the top, so the stuck bar stays a single slim line. */
@@ -148,6 +184,12 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   .masthead { padding-top: 0.9rem; padding-bottom: 0.9rem; }
   .topnav { gap: 0.9rem; font-size: 0.8rem; }
   .topnav .ext { display: none; }
+  /* Name and theme toggle share the first row; the nav takes the second. */
+  .navgroup { display: contents; }
+  .who { order: 0; }
+  .theme-toggle { order: 1; margin-left: auto; }
+  .topnav { order: 2; flex-basis: 100%; }
+  .bar.stuck .theme-toggle { display: none; }
   .bar.stuck .masthead { padding-top: 0; padding-bottom: 0; }
   .bar.stuck .who { display: none; }
   .hero .wrap { padding-top: calc(var(--bar-h) + 5rem); }
@@ -179,7 +221,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   color: var(--on-night-soft);
   margin: 0;
   padding: 0.9rem 0 0;
-  border-top: 1px solid rgba(255,255,255,0.14);
+  border-top: 1px solid var(--hero-line);
   max-width: 44rem;
   list-style: none;
 }
@@ -294,13 +336,19 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 <div class="bar">
   <div class="wrap masthead">
     <p class="who">Tsai Syun / dino920135</p>
-    <nav class="topnav">
-      <a href="#research">Research</a>
-      <a href="#publications">Publications</a>
-      <a href="#code">Code</a>
-      <a href="#notebook">Notebook</a>
-      <a class="ext" href="https://github.com/dino920135">GitHub</a>
-    </nav>
+    <div class="navgroup">
+      <nav class="topnav">
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#code">Code</a>
+        <a href="#notebook">Notebook</a>
+        <a class="ext" href="https://github.com/dino920135">GitHub</a>
+      </nav>
+      <button class="theme-toggle" type="button">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>
+        <span class="theme-label">Dark</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -315,10 +363,10 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
     <!-- Strokes don't scale, so dots stay round and evenly spaced when the viewBox is squashed. -->
     <g fill="none" stroke-linecap="round">
       <path d="M 470 196 C 560 168, 612 116, 700 78 S 902 22, 1030 34 S 1160 58, 1190 74"
-            stroke="#7683A8" stroke-width="1.6" stroke-dasharray="5 8" opacity="0.7"
+            class="drift" stroke-width="1.6" stroke-dasharray="5 8" opacity="0.7"
             vector-effect="non-scaling-stroke"/>
-      <use href="#fused" stroke="#55D0E8" stroke-width="2" opacity="0.9"/>
-      <use href="#fused" stroke="#55D0E8" stroke-width="5.4" stroke-dasharray="0 46" opacity="0.5"/>
+      <use href="#fused" class="fused" stroke-width="2" opacity="0.9"/>
+      <use href="#fused" class="fused" stroke-width="5.4" stroke-dasharray="0 46" opacity="0.5"/>
     </g>
   </svg>
 
@@ -483,6 +531,25 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 </main>
 
 <script>
+// Light/dark toggle. Without a saved choice the page follows the system setting.
+var root = document.documentElement;
+var toggle = document.querySelector('.theme-toggle');
+var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+function currentTheme() { return root.getAttribute('data-theme') || (systemDark.matches ? 'dark' : 'light'); }
+function updateToggle() {
+  var next = currentTheme() === 'dark' ? 'light' : 'dark';
+  toggle.querySelector('.theme-label').textContent = next === 'dark' ? 'Dark' : 'Light';
+  toggle.setAttribute('aria-label', 'Switch to ' + next + ' mode');
+}
+toggle.addEventListener('click', function () {
+  var next = currentTheme() === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+  updateToggle();
+});
+systemDark.addEventListener('change', updateToggle);
+updateToggle();
+
 // Give the fixed nav bar a solid background once the page has scrolled.
 var bar = document.querySelector('.bar');
 function updateBar() { bar.classList.toggle('stuck', window.scrollY > 8); }
