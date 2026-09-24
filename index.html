@@ -96,6 +96,11 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
   padding-top: 1.75rem;
   padding-bottom: clamp(7rem, 20vw, 11rem);
 }
+/* On narrow screens the figure would run through the lede; give it its own band below. */
+@media (max-width: 40rem) {
+  .hero .wrap { padding-bottom: 10.5rem; }
+  .trace { height: 10rem; }
+}
 
 .masthead {
   display: flex;
@@ -236,13 +241,20 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
 <header class="hero">
   <svg class="trace" viewBox="0 0 1200 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path d="M 470 196 C 560 168, 612 116, 700 78 S 902 22, 1030 34 S 1160 58, 1190 74"
-          fill="none" stroke="#7683A8" stroke-width="1.6"
-          stroke-dasharray="5 8" stroke-linecap="round" opacity="0.7"/>
-    <path id="fused" d="M 20 306 C 190 312, 250 208, 400 198 S 660 250, 790 168 S 1040 96, 1195 128"
-          fill="none" stroke="#55D0E8" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
-    <use href="#fused" stroke="#55D0E8" stroke-width="5.4" stroke-linecap="round"
-         stroke-dasharray="0 46" opacity="0.5"/>
+    <!-- Geometry only: styling on the original would override the <use> copies.
+         vector-effect lives here because it isn't inherited through <use>. -->
+    <defs>
+      <path id="fused" d="M 20 306 C 190 312, 250 208, 400 198 S 660 250, 790 168 S 1040 96, 1195 128"
+            vector-effect="non-scaling-stroke"/>
+    </defs>
+    <!-- Strokes don't scale, so dots stay round and evenly spaced when the viewBox is squashed. -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M 470 196 C 560 168, 612 116, 700 78 S 902 22, 1030 34 S 1160 58, 1190 74"
+            stroke="#7683A8" stroke-width="1.6" stroke-dasharray="5 8" opacity="0.7"
+            vector-effect="non-scaling-stroke"/>
+      <use href="#fused" stroke="#55D0E8" stroke-width="2" opacity="0.9"/>
+      <use href="#fused" stroke="#55D0E8" stroke-width="5.4" stroke-dasharray="0 46" opacity="0.5"/>
+    </g>
   </svg>
 
   <div class="wrap">
