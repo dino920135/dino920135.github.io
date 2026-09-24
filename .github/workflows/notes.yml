@@ -1,0 +1,44 @@
+name: Update notebook list
+on:
+  schedule:
+    # Hourly, offset from the profile README workflow
+    - cron: '30 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/notes.yml
+
+# The built-in GITHUB_TOKEN may push to this repo; no personal token needed.
+permissions:
+  contents: write
+
+jobs:
+  update-notes-list:
+    name: Update the notebook list in index.html
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: site
+
+      # Full history: the list is built from `git log`, which a shallow clone doesn't have.
+      - uses: actions/checkout@v4
+        with:
+          repository: dino920135/Notes
+          path: notes
+          fetch-depth: 0
+
+      # The list script lives in the profile repo, so there is only one copy of it.
+      - uses: actions/checkout@v4
+        with:
+          repository: dino920135/dino920135
+          path: profile
+
+      - name: Update site list
+        run: sh profile/.github/workflows/GetListInRepo.sh notes site/index.html
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          cwd: ./site
+          message: "Update notes list with Github Action"
+          default_author: github_actions
