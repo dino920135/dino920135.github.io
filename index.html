@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tsai Syun — Integrated Navigation</title>
-<meta name="description" content="Tsai Syun, Ph.D. candidate at NCKU Geomatics (POINT Lab). Integrated navigation with INS, GNSS, LiDAR, camera and mmWave radar.">
+<meta name="description" content="Tsai Syun, Ph.D. in Geomatics, NCKU (POINT Lab). Radar–visual ego-motion and map aiding for INS/GNSS land-vehicle navigation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -201,6 +201,17 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 .lead { max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-lead); }
 .lead strong { color: var(--ink); font-weight: 600; }
 
+/* ---------- key result ---------- */
+
+.result { margin: 2.25rem 0 2.75rem; padding: 1.5rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.result figcaption { font-family: var(--mono); font-size: var(--fs-meta); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 1rem; }
+.result dl { display: flex; flex-wrap: wrap; gap: 1.25rem 3rem; margin: 0 0 1rem; }
+.result dt { font-size: var(--fs-body); color: var(--ink-soft); }
+.result dd { margin: 0; font-size: var(--fs-section); font-weight: 600; line-height: 1.15; color: var(--ink-soft); }
+.result .key dt { color: var(--ink); font-weight: 600; }
+.result .key dd { color: var(--link); }
+.result p { margin: 0; max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-body); }
+
 /* ---------- research threads ---------- */
 
 .threads { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
@@ -226,6 +237,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 .entry h3 a { color: var(--ink); text-decoration: none; }
 .entry h3 a:hover { color: var(--link); text-decoration: underline; }
 .entry p { margin: 0 0 0.6rem; max-width: var(--measure); color: var(--ink-soft); font-size: var(--fs-body); }
+.entry p strong { color: var(--ink); font-weight: 600; }
 .entry .links { display: flex; flex-wrap: wrap; gap: 1rem; font-family: var(--mono); font-size: 0.82rem; margin: 0; }
 
 @media (max-width: 40rem) {
@@ -312,7 +324,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
 
   <div class="wrap">
     <h1>Navigation that holds when a sensor doesn’t.</h1>
-    <p class="lede">Ph.D. candidate at NCKU Geomatics, POINT Lab. I fuse inertial, satellite, LiDAR, camera and <em>mmWave radar</em> measurements into one trajectory that stays usable when any single sensor drops out.</p>
+    <p class="lede">Ph.D. in Geomatics, NCKU, POINT Lab. I fuse <em>FMCW radar</em> and camera with INS/GNSS so a land vehicle keeps its position through long satellite outages.</p>
     <ul class="stack">
       <li>INS</li><li>GNSS</li><li>LiDAR</li><li>Camera</li><li>mmWave radar</li>
     </ul>
@@ -324,18 +336,28 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
     <h2>Research</h2>
     <p class="lead">Integrated navigation is mostly a study of failure modes. GNSS drops out under a bridge, inertial solutions drift without bound, LiDAR needs structure, cameras need light, and radar sees through weather but returns a sparse, noisy cloud. <strong>My work is on combining them so the estimate holds where any one of them would not.</strong></p>
 
-    <div class="threads" style="margin-top:2rem">
+    <figure class="result">
+      <figcaption>Horizontal error after a 270 s GNSS outage in a parking tower, low-cost MEMS IMU</figcaption>
+      <dl>
+        <div><dt>Unaided INS</dt><dd>&gt; 1 km</dd></div>
+        <div class="key"><dt>Radar–visual aid + NHC</dt><dd>3.68 m</dd></div>
+        <div><dt>Wheel odometry</dt><dd>3.00 m</dd></div>
+      </dl>
+      <p>The radar–visual aid gets within a metre of wheel odometry without a vehicle model or access to the vehicle’s own signals.</p>
+    </figure>
+
+    <div class="threads">
       <div class="thread">
-        <h3>Radar-aided localization</h3>
-        <p>Using mmWave radar as a navigation sensor rather than a perception one — ego-velocity from Doppler, registration against sparse returns, and what that buys you when the other sensors are blind.</p>
+        <h3>Radar–visual ego-motion</h3>
+        <p>A cascaded estimator that fuses FMCW radar Doppler velocity with monocular visual odometry into one scaled velocity aid for an error-state Kalman filter. The radar, not the IMU, fixes the visual scale, so the visual channel stays statistically independent of the inertial one.</p>
       </div>
       <div class="thread">
-        <h3>Inertial characterization</h3>
-        <p>Understanding what a given IMU actually does before trusting it in a filter: correlating raw output against a known reference to recover orientation, scale and error behaviour.</p>
+        <h3>Map-aided positioning</h3>
+        <p>Using high-definition maps as an absolute reference: matching visual point clouds to HD vector maps, and LiDAR scan matching against HD point-cloud maps.</p>
       </div>
       <div class="thread">
-        <h3>Rigs and synchronization</h3>
-        <p>Multi-sensor fusion is only as good as its timestamps. Building the hardware side — microcontroller triggering, disciplined clocks, vehicle interfaces — so the data arriving at the estimator is worth estimating from.</p>
+        <h3>Timing and sensor rigs</h3>
+        <p>Disciplining the microcontroller clock to GNSS and triggering and timestamping each sensor in hardware, so every measurement reaching the filter sits on one timeline.</p>
       </div>
     </div>
   </section>
@@ -344,27 +366,38 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-r
     <h2>Publications</h2>
 
     <div class="entry">
-      <p class="meta">2025<br>Journal or venue</p>
+      <p class="meta">2026<br>Dissertation</p>
       <div>
-        <h3><a href="[doi or pdf link]">[Paper title]</a></h3>
-        <p>[Authors, with your own name marked. One sentence on the contribution — what the paper establishes that wasn't known before.]</p>
-        <p class="links">
-          <a href="[doi]">DOI</a>
-          <a href="[pdf]">PDF</a>
-          <a href="[code repo]">Code</a>
-        </p>
+        <h3><a href="https://thesis.lib.ncku.edu.tw/thesis/detail/f2e2abdbeb079d79fea307dfd5ce2a73/?seq=1">Radar–Visual Ego-Motion and Vector-Map Aiding in Loosely-Coupled INS/GNSS Land-Vehicle Navigation</a></h3>
+        <p><strong>Syun Tsai</strong>. Advisor: Kai-Wei Chiang. Ph.D. dissertation, Department of Geomatics, National Cheng Kung University.</p>
+        <p class="links"><a href="https://thesis.lib.ncku.edu.tw/thesis/detail/f2e2abdbeb079d79fea307dfd5ce2a73/?seq=1">NCKU library</a></p>
       </div>
     </div>
 
     <div class="entry">
-      <p class="meta">2024<br>Conference</p>
+      <p class="meta">2024<br>IEEE IoT-J</p>
       <div>
-        <h3><a href="[link]">[Paper title]</a></h3>
-        <p>[Authors. One sentence on the contribution.]</p>
-        <p class="links">
-          <a href="[doi]">DOI</a>
-          <a href="[pdf]">PDF</a>
-        </p>
+        <h3><a href="https://doi.org/10.1109/jiot.2024.3435344">Creation and Verification of High-Definition Point Cloud Maps for Autonomous Vehicle Navigation</a></h3>
+        <p>Kai-Wei Chiang, Surachet Srinara, Yu-Ting Chiu, <strong>Syun Tsai</strong>, Meng-Lun Tsai, Chalermchon Satirapod, Naser El-Sheimy, Mengchi Ai. <em>IEEE Internet of Things Journal</em> 11(23): 37582–37598.</p>
+        <p class="links"><a href="https://doi.org/10.1109/jiot.2024.3435344">DOI</a></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">2023<br>IEEE TVT</p>
+      <div>
+        <h3><a href="https://doi.org/10.1109/tvt.2023.3237275">High-Definition-Map-Based LiDAR Localization Through Dynamic Time-Synchronized Normal Distribution Transform Scan Matching</a></h3>
+        <p>Kai-Wei Chiang, Surachet Srinara, <strong>Syun Tsai</strong>, Cheng-Xian Lin, Meng-Lun Tsai. <em>IEEE Transactions on Vehicular Technology</em> 72(6): 7011–7023.</p>
+        <p class="links"><a href="https://doi.org/10.1109/tvt.2023.3237275">DOI</a></p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <p class="meta">2022<br>IEEE IV</p>
+      <div>
+        <h3><a href="https://doi.org/10.1109/iv51971.2022.9827391">Reliable Evaluation of Navigation States Estimation for Automated Driving Systems</a></h3>
+        <p>Surachet Srinara, <strong>Syun Tsai</strong>, Cheng-Xian Lin, Meng-Lun Tsai, Kai-Wei Chiang. <em>2022 IEEE Intelligent Vehicles Symposium (IV)</em>, 1765–1773.</p>
+        <p class="links"><a href="https://doi.org/10.1109/iv51971.2022.9827391">DOI</a></p>
       </div>
     </div>
   </section>
